@@ -1,14 +1,16 @@
 <?php
 
+namespace itrvb\onlineshop;
+
 class User{
-    private $id;
-    private $first_name;
-    private $last_name;
-    private $patronim;
-    private $address;
-    private $email;
-    private $password;
-    private $profile_picture;
+    protected $id;
+    protected $first_name;
+    protected $last_name;
+    protected $patronim;
+    protected $address;
+    protected $email;
+    protected $password;
+    protected $profile_picture;
 
     public function __construct(){
         // ...

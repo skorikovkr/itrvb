@@ -1,6 +1,8 @@
 <?php
 
-class Basket{
+namespace itrvb\onlineshop;
+
+class Basket {
     private $id;
     private $user_id;
     private $products;

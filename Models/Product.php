@@ -1,5 +1,7 @@
 <?php
 
+namespace itrvb\onlineshop;
+
 class Product{
     private $id;
     private $name;

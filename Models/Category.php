@@ -1,5 +1,7 @@
 <?php
 
+namespace itrvb\onlineshop;
+
 class Category{
     private $id;
     private $name;

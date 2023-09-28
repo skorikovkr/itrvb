@@ -1,5 +1,7 @@
 <?php
 
+namespace itrvb\onlineshop;
+
 class Order{
     private $id;
     private $user_id;

@@ -2,25 +2,28 @@
 
 namespace itrvb\onlineshop;
 
-class Product{
-    private $id;
-    private $name;
-    private $category_id;
-    private $description;
-    private $price;
-    private $amount_left;
-    private $image;
+abstract class AbstractProduct{
 
-    public function __construct(){
-        // ...
+    public function __construct(
+        protected $id,
+        protected $name,
+        protected $category_id,
+        protected $description,
+        protected $price,
+        protected $amount_left,
+        protected $image,
+    )
+    {
     }
+
+    abstract protected function calculatePrice($amount);
     
     public function get_id()
     {
         return $this->id;
     }
 
-    public function setId($id)
+    public function set_id($id)
     {
         $this->id = $id;
     }

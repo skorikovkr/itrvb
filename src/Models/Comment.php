@@ -12,6 +12,38 @@ class Comment {
     )
     {}
 
+    public function getUuid() {
+        return $this->uuid;
+    }
+
+    public function setUuid($val) {
+        $this->uuid = $val;
+    }
+
+    public function getUser() {
+        return $this->user ;
+    }
+
+    public function setUser($val) {
+        $this->user = $val;
+    }
+    
+    public function getPost() {
+        return $this->post ;
+    }
+
+    public function setPost($val) {
+        $this->post = $val;
+    }
+    
+    public function getText() {
+        return $this->text ;
+    }
+
+    public function setText($val) {
+        $this->text = $val;
+    }
+
     public function __toString() {
         return $this->user . " wrote: '" . $this->text . "' on post '" . $this->post . "'";
     }

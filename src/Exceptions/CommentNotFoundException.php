@@ -2,4 +2,4 @@
 
 namespace Root\Skorikov\Exceptions;
 
-class CommentNotFoundException extends Exception {}
+class CommentNotFoundException extends \Exception {}

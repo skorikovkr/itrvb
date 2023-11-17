@@ -2,4 +2,4 @@
 
 namespace Root\Skorikov\Exceptions;
 
-class InvalidArgumentException extends Exception {}
+class InvalidArgumentException extends \Exception {}

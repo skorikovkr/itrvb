@@ -1,11 +1,14 @@
 <?php  
 namespace Root\Skorikov\Models;
 
+use Root\Skorikov\Infrastructure\UUID;
+
 class User {
     public function __construct(
-        private int $id,
+        private UUID $uuid,
         private string $firstName,
-        private string $lastName
+        private string $lastName,
+        private string $username
     )
     {}
 

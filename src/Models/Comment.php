@@ -1,9 +1,11 @@
 <?php  
 namespace Root\Skorikov\Models;
 
+use Root\Skorikov\Infrastructure\UUID;
+
 class Comment {
     public function __construct(
-        private int $id,
+        private UUID $uuid,
         private User $user,
         private Post $post,
         private string $text,

@@ -1,9 +1,11 @@
 <?php  
 namespace Root\Skorikov\Models;
 
+use Root\Skorikov\Infrastructure\UUID;
+
 class Post {
     public function __construct(
-        private int $id,
+        private UUID $uuid,
         private User $authorUserId,
         private string $title,
         private string $text,
@@ -11,6 +13,6 @@ class Post {
     {}
     
     public function __toString() {
-        return $this->title . " (id:" . $this->id . ")";
+        return $this->title . " (id:" . $this->uuid . ")";
     }
 }

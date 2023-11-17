@@ -6,8 +6,9 @@ use Root\Skorikov\Exceptions\UserNotFoundException;
 use Root\Skorikov\Infrastructure\SqliteConnector;
 use Root\Skorikov\Models\User;
 use Root\Skorikov\Infrastructure\UUID;
+use Root\Skorikov\Repositories\Interfaces\UserRepositoryInterface;
 
-class SqliteUserRepository
+class SqliteUserRepository implements UserRepositoryInterface
 {
     private PDO $connection;
 

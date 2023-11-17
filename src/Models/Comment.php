@@ -6,8 +6,8 @@ use Root\Skorikov\Infrastructure\UUID;
 class Comment {
     public function __construct(
         private UUID $uuid,
-        private User $user,
-        private Post $post,
+        private UUID $userUuid,
+        private UUID $postUuid,
         private string $text,
     )
     {}
@@ -20,20 +20,20 @@ class Comment {
         $this->uuid = $val;
     }
 
-    public function getUser() {
-        return $this->user ;
+    public function getUserUuid() {
+        return $this->userUuid ;
     }
 
-    public function setUser($val) {
-        $this->user = $val;
+    public function setUserUuid($val) {
+        $this->userUuid = $val;
     }
     
-    public function getPost() {
-        return $this->post ;
+    public function getPostUuid() {
+        return $this->postUuid;
     }
 
-    public function setPost($val) {
-        $this->post = $val;
+    public function setPostUuid($val) {
+        $this->postUuid = $val;
     }
     
     public function getText() {
@@ -45,6 +45,6 @@ class Comment {
     }
 
     public function __toString() {
-        return $this->user . " wrote: '" . $this->text . "' on post '" . $this->post . "'";
+        return $this->userUuid . " wrote: '" . $this->text . "' on post '" . $this->postUuid . "'";
     }
 }

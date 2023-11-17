@@ -6,7 +6,7 @@ use Root\Skorikov\Infrastructure\UUID;
 class Post {
     public function __construct(
         private UUID $uuid,
-        private User $authorUser,
+        private Uuid $authorUserUuid,
         private string $title,
         private string $text,
     )
@@ -20,12 +20,12 @@ class Post {
         $this->uuid = $val;
     }
 
-    public function getAuthorUser() {
-        return $this->authorUser;
+    public function getAuthorUserUuid() {
+        return $this->authorUserUuid;
     }
 
-    public function setAuthorUser($val) {
-        $this->authorUser = $val;
+    public function setAuthorUserUuid($val) {
+        $this->authorUserUuid = $val;
     }
     
     public function getTitle() {

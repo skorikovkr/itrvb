@@ -5,6 +5,11 @@
             "Root\\Skorikov\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Root\\Skorikov\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Skorikov Kirill",
@@ -12,7 +17,8 @@
         }
     ],
     "require-dev": {
-        "roave/security-advisories": "dev-latest"
+        "roave/security-advisories": "dev-latest",
+        "phpunit/phpunit": "^10.4"
     },
     "require": {
         "fakerphp/faker": "^1.23",

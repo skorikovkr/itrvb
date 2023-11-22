@@ -10,10 +10,6 @@ class SqliteConnector
     {
     }
 
-    private function __clone()
-    {
-    }
-
     public static function getInstance()
     {
         if (is_null(self::$instance)) {
@@ -23,7 +19,7 @@ class SqliteConnector
         return self::$instance;
     }
 
-    public function getConnector(): \PDO
+    public function getConnector(): \PDO | null
     {
         if (is_null(self::$instance)) {
             return null;

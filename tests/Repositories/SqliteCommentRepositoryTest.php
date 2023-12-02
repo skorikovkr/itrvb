@@ -1,52 +1,70 @@
 <?php
-
 namespace Root\Skorikov\Infrastructure\Tests;
 
-use PDOException;
+use PDO;
+use PDOStatement;
 use PHPUnit\Framework\TestCase;
-use Root\Skorikov\Exceptions\InvalidArgumentException;
-use Root\Skorikov\Infrastructure\SqliteTestConnector;
+use Root\Skorikov\Exceptions\CommentNotFoundException;
 use Root\Skorikov\Infrastructure\UUID;
 use Root\Skorikov\Models\Comment;
-use Root\Skorikov\Models\Post;
 use Root\Skorikov\Repositories\CommentRepository\SqliteCommentRepository;
 
-final class SqliteCommentRepositoryTest extends TestCase
+class SqliteCommentRepositoryTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        //self::cleanUp();
-    }
+	public function testItThrowsAnExceptionWhenCommentNotFound(): void
+	{
+		$connectionStub = $this->createStub(PDO::class);
+		$statementStub = $this->createStub(PDOStatement::class);
+		$statementStub->method('fetch')->willReturn(false);
+		$connectionStub->method('prepare')->willReturn($statementStub);
+		$repository = new SqliteCommentRepository($connectionStub);
+		$this->expectException(CommentNotFoundException::class);
+        $testUUID = '00fbaf33-a65c-47a9-81a3-feb4a1417363';
+		$this->expectExceptionMessage("Comment not found (uuid:$testUUID).");
+		$repository->get(new UUID($testUUID));
+	}
 
-    private static function cleanUp(): void {
-        $sql = file_get_contents('init_db_test.sql');
-        $connection = SqliteTestConnector::getConnector();
-        $sql = $connection->prepare($sql);
-        $sql->execute();
-    }
+	public function testItFindComment(): void
+	{
+        $testUUID = 'f1f2fae6-8a72-4ced-84e3-7a66253f25ec';
+		$statementStub = $this->createStub(PDOStatement::class);
+        $statementStub->method('execute')->willReturn(true);
+		$statementStub->method('fetch')->willReturn([
+			'uuid' => new UUID($testUUID),
+			'author_uuid' => new UUID($testUUID),
+			'post_uuid' => new UUID($testUUID),
+			'text' => 'Test-text',
+		]);
+		$connectionStub = $this->createStub(PDO::class);
+		$connectionStub->method('prepare')->willReturn($statementStub);
+		$repository = new SqliteCommentRepository($connectionStub);
+		$entity = $repository->get(new UUID($testUUID));
+        $this->assertEquals($entity->getUuid()->__toString(), $testUUID);
+        $this->assertEquals($entity->getUserUuid()->__toString(), $testUUID);
+        $this->assertEquals($entity->getPostUuid()->__toString(), $testUUID);
+        $this->assertEquals($entity->getText(), 'Test-text');
+	}
 
-    public function testSuccessSave(): void
-    {
-        $connection = SqliteTestConnector::getConnector();
-        $rep = new SqliteCommentRepository($connection);
-        $rep->save(new Comment(
-            new UUID('e97863b1-c1e1-4193-8739-d0ea045e8dba'),
-            new UUID('f09a2aac-ba50-4eb7-9036-6e27466ab17a'),
-            new UUID('c336bc52-e711-44bd-b0f5-ada649328281'),
-            'test-text'
-        ));
-    }
-
-    public function testNotSuccessSaveNotUniqueFK(): void
-    {
-        $this->expectException(PDOException::class);
-        $connection = SqliteTestConnector::getConnector();
-        $rep = new SqliteCommentRepository($connection);
-        $rep->save(new Comment(
-            new UUID('f1f2fae6-8a72-4ced-84e3-7a66253f25ec'),
-            new UUID('f09a2aac-ba50-4eb7-9036-6e27466ab17a'),
-            new UUID('c336bc52-e711-44bd-b0f5-ada649328281'),
-            'test-text'
-        ));
-    }
+	public function testItSavesCommentToDatabase(): void
+	{
+        $testUUID = 'f1f2fae6-8a72-4ced-84e3-7a66253f25ec';
+		$statementMock = $this->createMock(PDOStatement::class);
+		$statementMock->expects($this->once())->method('execute')->with([
+			'post_uuid' => new UUID($testUUID),
+			'text' => 'Test-text',
+			'author_uuid' => new UUID($testUUID),
+			'uuid' => new UUID($testUUID)
+		]);
+		$connectionStub = $this->createStub(PDO::class);
+		$connectionStub->method('prepare')->willReturn($statementMock);
+		$repository = new SqliteCommentRepository($connectionStub);
+		$repository->save(
+			new Comment(
+				new UUID($testUUID),
+                new UUID($testUUID),
+                new UUID($testUUID),
+				'Test-text'
+			)
+		);
+	}
 }

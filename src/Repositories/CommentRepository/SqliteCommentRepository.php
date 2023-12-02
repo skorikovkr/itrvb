@@ -2,6 +2,7 @@
 namespace Root\Skorikov\Repositories\CommentRepository;
 
 use PDO;
+use Root\Skorikov\Exceptions\CommentNotFoundException;
 use Root\Skorikov\Exceptions\UserNotFoundException;
 use Root\Skorikov\Infrastructure\UUID;
 use Root\Skorikov\Models\Comment;
@@ -15,11 +16,11 @@ class SqliteCommentRepository implements CommentRepositoryInterface
     {
     }
 
-    public function save(Comment $post): void {
+    public function save(Comment $post): bool {
         $sql = $this->connection->prepare(
             "INSERT INTO comments (post_uuid,text,author_uuid,uuid) VALUES (:post_uuid,:text,:author_uuid,:uuid)"
         );
-        $sql->execute([
+        return $sql->execute([
             'post_uuid' => $post->getPostUuid(),
             'text' => $post->getText(),
             'author_uuid' => $post->getUserUuid(),
@@ -36,7 +37,7 @@ class SqliteCommentRepository implements CommentRepositoryInterface
         ]);
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         if (!$result) {
-            throw new UserNotFoundException("Comment not found (uuid:$uuid).");
+            throw new CommentNotFoundException("Comment not found (uuid:$uuid).");
         }
         return new Comment(
             new UUID($result['uuid']),

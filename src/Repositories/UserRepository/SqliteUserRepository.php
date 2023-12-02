@@ -16,11 +16,11 @@ class SqliteUserRepository implements UserRepositoryInterface
     {
     }
 
-    public function save(User $user): void {
+    public function save(User $user): bool {
         $sql = $this->connection->prepare(
             "INSERT INTO users (first_name,last_name,username,uuid) VALUES (:first_name,:last_name,:username,:uuid)"
         );
-        $sql->execute([
+        return $sql->execute([
             'first_name' => $user->getFirstName(),
             'last_name' => $user->getLastName(),
             'username' => $user->getUsername(),
@@ -58,7 +58,7 @@ class SqliteUserRepository implements UserRepositoryInterface
 		$result = $statement->fetch(PDO::FETCH_ASSOC);
 		if ($result === false) {
 			throw new UserNotFoundException(
-				"Cannot get user: $username"
+				"User not found (username:$username)."
 			);
 		}
 		return new User(

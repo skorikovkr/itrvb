@@ -2,6 +2,7 @@
 namespace Root\Skorikov\Repositories\PostRepository;
 
 use PDO;
+use Root\Skorikov\Exceptions\PostNotFoundException;
 use Root\Skorikov\Exceptions\UserNotFoundException;
 use Root\Skorikov\Infrastructure\SqliteConnector;
 use Root\Skorikov\Infrastructure\UUID;
@@ -37,7 +38,7 @@ class SqlitePostRepository implements PostRepositoryInterface
         ]);
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         if (!$result) {
-            throw new UserNotFoundException("Post not found (uuid:$uuid).");
+            throw new PostNotFoundException("Post not found (uuid:$uuid).");
         }
         return new Post(
             new UUID($result['uuid']),

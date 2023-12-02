@@ -1,8 +1,14 @@
 <?php
 
 use Root\Skorikov\Infrastructure\Container\DIContainer;
+use Root\Skorikov\Infrastructure\Http\Auth\IdentificationInterface;
+use Root\Skorikov\Infrastructure\Http\Auth\JsonBodyUuidIdentification;
+use Root\Skorikov\Repositories\CommentRepository\SqliteCommentRepository;
+use Root\Skorikov\Repositories\Interfaces\CommentRepositoryInterface;
+use Root\Skorikov\Repositories\Interfaces\PostRepositoryInterface;
 use Root\Skorikov\Repositories\UserRepository\SqliteUserRepository;
 use Root\Skorikov\Repositories\Interfaces\UserRepositoryInterface;
+use Root\Skorikov\Repositories\PostRepository\SqlitePostRepository;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -10,5 +16,8 @@ $container = new DIContainer;
 
 $container->bind(PDO::class, new PDO('sqlite:' . __DIR__ . '/blog.sqlite'));
 $container->bind(UserRepositoryInterface::class, SqliteUserRepository::class);
+$container->bind(PostRepositoryInterface::class, SqlitePostRepository::class);
+$container->bind(CommentRepositoryInterface::class, SqliteCommentRepository::class);
+$container->bind(IdentificationInterface::class, JsonBodyUuidIdentification::class);
 
 return $container;

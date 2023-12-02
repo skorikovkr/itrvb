@@ -29,7 +29,8 @@ $routes = [
 		'/users/show' => FindByUsername::class,
 	],
 	'POST' => [
-		'/users/create' => CreateUser::class
+		'/users/create' => CreateUser::class,
+		'/posts/create' => CreatePost::class,
 	]
 ];
 

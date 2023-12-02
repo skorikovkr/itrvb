@@ -3,18 +3,16 @@ namespace Root\Skorikov\Repositories\CommentRepository;
 
 use PDO;
 use Root\Skorikov\Exceptions\UserNotFoundException;
-use Root\Skorikov\Infrastructure\SqliteConnector;
 use Root\Skorikov\Infrastructure\UUID;
 use Root\Skorikov\Models\Comment;
 use Root\Skorikov\Repositories\Interfaces\CommentRepositoryInterface;
 
 class SqliteCommentRepository implements CommentRepositoryInterface
 {
-    private PDO $connection;
-
-    public function __construct()    
+    public function __construct(
+        private PDO $connection
+    )    
     {
-        $this->connection = SqliteConnector::getInstance()->getConnector();
     }
 
     public function save(Comment $post): void {

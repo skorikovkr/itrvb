@@ -10,11 +10,10 @@ use Root\Skorikov\Repositories\Interfaces\UserRepositoryInterface;
 
 class SqliteUserRepository implements UserRepositoryInterface
 {
-    private PDO $connection;
-
-    public function __construct()    
+    public function __construct(
+        private PDO $connection
+    )    
     {
-        $this->connection = SqliteConnector::getInstance()->getConnector();
     }
 
     public function save(User $user): void {
@@ -47,4 +46,26 @@ class SqliteUserRepository implements UserRepositoryInterface
             $result['username']
         );
     }
+
+	public function getByUsername(string $username): User
+	{
+		$statement = $this->connection->prepare(
+			'SELECT * FROM users WHERE username = :username'
+		);
+		$statement->execute([
+			':username' => $username,
+		]);
+		$result = $statement->fetch(PDO::FETCH_ASSOC);
+		if ($result === false) {
+			throw new UserNotFoundException(
+				"Cannot get user: $username"
+			);
+		}
+		return new User(
+			new UUID($result['uuid']),
+            $result['first_name'],
+            $result['last_name'],
+			$result['username']
+		);
+	}
 }

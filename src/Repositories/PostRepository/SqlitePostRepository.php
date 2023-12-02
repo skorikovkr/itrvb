@@ -10,11 +10,10 @@ use Root\Skorikov\Repositories\Interfaces\PostRepositoryInterface;
 
 class SqlitePostRepository implements PostRepositoryInterface
 {
-    private PDO $connection;
-
-    public function __construct()    
+    public function __construct(
+        private PDO $connection
+    )    
     {
-        $this->connection = SqliteConnector::getInstance()->getConnector();
     }
 
     public function save(Post $post): void {

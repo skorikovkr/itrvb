@@ -4,6 +4,7 @@ use Root\Skorikov\Actions\Posts\CreateComment;
 use Root\Skorikov\Exceptions\HttpException;
 use Root\Skorikov\Actions\Users\CreateUser;
 use Root\Skorikov\Actions\Posts\CreatePost;
+use Root\Skorikov\Actions\Posts\DeletePost;
 use Root\Skorikov\Actions\Users\FindByUsername;
 use Root\Skorikov\Infrastructure\Http\ErrorResponse;
 use Root\Skorikov\Infrastructure\Http\Request;
@@ -34,6 +35,9 @@ $routes = [
 		'/users/create' => CreateUser::class,
 		'/posts/create' => CreatePost::class,
 		'/posts/comment' => CreateComment::class,
+	],
+	'DELETE' => [
+		'/posts' => DeletePost::class,
 	]
 ];
 

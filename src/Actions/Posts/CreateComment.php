@@ -10,34 +10,34 @@ use Root\Skorikov\Infrastructure\Http\Request;
 use Root\Skorikov\Infrastructure\Http\Response;
 use Root\Skorikov\Infrastructure\Http\SuccessfulResponse;
 use Root\Skorikov\Infrastructure\UUID;
-use Root\Skorikov\Models\Post;
-use Root\Skorikov\Repositories\Interfaces\PostRepositoryInterface;
+use Root\Skorikov\Models\Comment;
+use Root\Skorikov\Repositories\Interfaces\CommentRepositoryInterface;
 
-class CreatePost implements ActionInterface
+class CreateComment implements ActionInterface
 {
     public function __construct(
-        private PostRepositoryInterface $postsRepository,
+        private CommentRepositoryInterface $repository,
         private IdentificationInterface $identification
     )
     {}
 
     public function handle(Request $request): Response
 	{
-        $user = $this->identification->user($request);
-        $newPostUuid = UUID::random();
+        //$user = $this->identification->user($request);
+        $newUuid = UUID::random();
         try {
-            $post = new Post(
-                $newPostUuid,
-                $user->getUuid(),
-                $request->jsonBodyField('title'),
-                $request->jsonBodyField('text')
+            $entity = new Comment(
+                $newUuid,
+                new UUID($request->jsonBodyField('author_uuid')),
+                new UUID($request->jsonBodyField('post_uuid')),
+                $request->jsonBodyField('text'),
             );
         } catch (HttpException $exception) {
             return new ErrorResponse($exception->getMessage());
         }
-        $this->postsRepository->save($post);
+        $this->repository->save($entity);
         return new SuccessfulResponse([
-            'uuid' => (string)$newPostUuid,
+            'uuid' => (string)$newUuid,
         ]);
     }
 }

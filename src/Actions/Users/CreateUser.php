@@ -25,7 +25,7 @@ class CreateUser implements ActionInterface
   public function handle(Request $request): Response
   {
     $username = $request->jsonBodyField('username');
-		if ($this->userExisit($username)) {
+		if ($this->userExists($username)) {
 			throw new CommandException(
 				"User already exists: $username"
 			);
@@ -47,7 +47,7 @@ class CreateUser implements ActionInterface
     ]);
   }
 
-	public function userExisit(string $username): bool
+	public function userExists(string $username): bool
 	{
 		try {
 			$this->usersRepository->getByUsername($username);

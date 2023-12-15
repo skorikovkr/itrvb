@@ -26,7 +26,7 @@ try {
 
 $routes = [
 	'GET' => [
-		'/users/show' => FindByUsername::class,
+		'/users/show' => FindByUsername::class
 	],
 	'POST' => [
 		'/users/create' => CreateUser::class,

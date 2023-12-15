@@ -64,7 +64,7 @@ class Request
 			throw new HttpException('Cannot get path from the request');
 		}
 
-		$components = parse_url($this->server['REQUEST_URI']);
+		$components = parse_url($this->server['PATH_INFO']);
 
 		if (!is_array($components) || !array_key_exists('path', $components)) {
 			throw new HttpException('Cannot get path from the request');

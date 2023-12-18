@@ -1,6 +1,6 @@
 <?php
 
-namespace Root\Skorikov\Infrastructure\Tests;
+namespace Root\Skorikov\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Root\Skorikov\Actions\Posts\CreatePost;

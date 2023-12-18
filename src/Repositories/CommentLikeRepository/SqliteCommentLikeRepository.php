@@ -2,6 +2,7 @@
 namespace Root\Skorikov\Repositories\CommentLikeRepository;
 
 use PDO;
+use Psr\Log\LoggerInterface;
 use Root\Skorikov\Exceptions\PostNotFoundException;
 use Root\Skorikov\Exceptions\UserNotFoundException;
 use Root\Skorikov\Exceptions\CommentLikeNotFoundException;
@@ -12,7 +13,8 @@ use Root\Skorikov\Repositories\Interfaces\CommentLikeRepositoryInterface;
 class SqliteCommentLikeRepository implements CommentLikeRepositoryInterface
 {
     public function __construct(
-        private PDO $connection
+        private PDO $connection,
+        private LoggerInterface $logger
     )    
     {
     }
@@ -24,6 +26,7 @@ class SqliteCommentLikeRepository implements CommentLikeRepositoryInterface
         $existingLike = $this->getByCommentAndUserUuid($post->getCommentUuid(), $post->getUserUuid());
         if (!is_null($existingLike))
             return false;
+        $this->logger->info("Comment like created: " . $post->getUuid());
         return $sql->execute([
             'comment_uuid' => $post->getCommentUuid(),
             'user_uuid' => $post->getUserUuid(),
@@ -41,6 +44,7 @@ class SqliteCommentLikeRepository implements CommentLikeRepositoryInterface
         ]);
         $result = $sql->fetchAll();
         if (!$result) {
+            $this->logger->warning("Comment like not found: " . $commentUuid);
             throw new CommentLikeNotFoundException("CommentLike not found with Comment.uuid (uuid:$commentUuid).");
         }
         $likes = [];

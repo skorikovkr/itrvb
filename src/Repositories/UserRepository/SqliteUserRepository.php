@@ -2,6 +2,7 @@
 namespace Root\Skorikov\Repositories\UserRepository;
 
 use PDO;
+use Psr\Log\LoggerInterface;
 use Root\Skorikov\Exceptions\UserNotFoundException;
 use Root\Skorikov\Infrastructure\SqliteConnector;
 use Root\Skorikov\Models\User;
@@ -11,7 +12,8 @@ use Root\Skorikov\Repositories\Interfaces\UserRepositoryInterface;
 class SqliteUserRepository implements UserRepositoryInterface
 {
     public function __construct(
-        private PDO $connection
+        private PDO $connection,
+        private LoggerInterface $logger
     )    
     {
     }
@@ -20,6 +22,7 @@ class SqliteUserRepository implements UserRepositoryInterface
         $sql = $this->connection->prepare(
             "INSERT INTO users (first_name,last_name,username,uuid) VALUES (:first_name,:last_name,:username,:uuid)"
         );
+        $this->logger->info("User created: " . $user->getUuid());
         return $sql->execute([
             'first_name' => $user->getFirstName(),
             'last_name' => $user->getLastName(),
@@ -37,6 +40,7 @@ class SqliteUserRepository implements UserRepositoryInterface
         ]);
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         if (!$result) {
+            $this->logger->warning("User not found: " . $uuid);
             throw new UserNotFoundException("User not found (uuid:$uuid).");
         }
         return new User(
@@ -57,6 +61,7 @@ class SqliteUserRepository implements UserRepositoryInterface
 		]);
 		$result = $statement->fetch(PDO::FETCH_ASSOC);
 		if ($result === false) {
+            $this->logger->warning("User not found: " . $username);
 			throw new UserNotFoundException(
 				"User not found (username:$username)."
 			);

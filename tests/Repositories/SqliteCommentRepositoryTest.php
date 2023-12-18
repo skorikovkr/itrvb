@@ -1,13 +1,15 @@
 <?php
-namespace Root\Skorikov\Infrastructure\Tests;
+namespace Root\Skorikov\Tests;
 
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Root\Skorikov\Exceptions\CommentNotFoundException;
 use Root\Skorikov\Infrastructure\UUID;
 use Root\Skorikov\Models\Comment;
 use Root\Skorikov\Repositories\CommentRepository\SqliteCommentRepository;
+use Root\Skorikov\Tests\Helper\DummyLogger;
 
 class SqliteCommentRepositoryTest extends TestCase
 {
@@ -17,7 +19,7 @@ class SqliteCommentRepositoryTest extends TestCase
 		$statementStub = $this->createStub(PDOStatement::class);
 		$statementStub->method('fetch')->willReturn(false);
 		$connectionStub->method('prepare')->willReturn($statementStub);
-		$repository = new SqliteCommentRepository($connectionStub);
+		$repository = new SqliteCommentRepository($connectionStub, new DummyLogger());
 		$this->expectException(CommentNotFoundException::class);
         $testUUID = '00fbaf33-a65c-47a9-81a3-feb4a1417363';
 		$this->expectExceptionMessage("Comment not found (uuid:$testUUID).");
@@ -37,7 +39,7 @@ class SqliteCommentRepositoryTest extends TestCase
 		]);
 		$connectionStub = $this->createStub(PDO::class);
 		$connectionStub->method('prepare')->willReturn($statementStub);
-		$repository = new SqliteCommentRepository($connectionStub);
+		$repository = new SqliteCommentRepository($connectionStub, new DummyLogger());
 		$entity = $repository->get(new UUID($testUUID));
         $this->assertEquals($entity->getUuid()->__toString(), $testUUID);
         $this->assertEquals($entity->getUserUuid()->__toString(), $testUUID);
@@ -57,7 +59,7 @@ class SqliteCommentRepositoryTest extends TestCase
 		]);
 		$connectionStub = $this->createStub(PDO::class);
 		$connectionStub->method('prepare')->willReturn($statementMock);
-		$repository = new SqliteCommentRepository($connectionStub);
+		$repository = new SqliteCommentRepository($connectionStub, new DummyLogger());
 		$repository->save(
 			new Comment(
 				new UUID($testUUID),

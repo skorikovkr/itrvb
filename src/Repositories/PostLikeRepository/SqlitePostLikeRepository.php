@@ -2,6 +2,7 @@
 namespace Root\Skorikov\Repositories\PostLikeRepository;
 
 use PDO;
+use Psr\Log\LoggerInterface;
 use Root\Skorikov\Exceptions\PostNotFoundException;
 use Root\Skorikov\Exceptions\UserNotFoundException;
 use Root\Skorikov\Exceptions\PostLikeNotFoundException;
@@ -12,7 +13,8 @@ use Root\Skorikov\Repositories\Interfaces\PostLikeRepositoryInterface;
 class SqlitePostLikeRepository implements PostLikeRepositoryInterface
 {
     public function __construct(
-        private PDO $connection
+        private PDO $connection,
+        private LoggerInterface $logger
     )    
     {
     }
@@ -24,6 +26,7 @@ class SqlitePostLikeRepository implements PostLikeRepositoryInterface
         $existingLike = $this->getByPostAndUserUuid($post->getPostUuid(), $post->getUserUuid());
         if (!is_null($existingLike))
             return false;
+        $this->logger->info("Like created: " . $post->getUuid());
         return $sql->execute([
             'post_uuid' => $post->getPostUuid(),
             'user_uuid' => $post->getUserUuid(),
@@ -41,6 +44,7 @@ class SqlitePostLikeRepository implements PostLikeRepositoryInterface
         ]);
         $result = $sql->fetchAll();
         if (!$result) {
+            $this->logger->warning("Post like not found: " . $postUuid);
             throw new PostLikeNotFoundException("PostLike not found with Post.uuid (uuid:$postUuid).");
         }
         $likes = [];

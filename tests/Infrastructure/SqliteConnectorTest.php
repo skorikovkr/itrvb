@@ -1,6 +1,6 @@
 <?php
 
-namespace Root\Skorikov\Infrastructure\Tests;
+namespace Root\Skorikov\Tests;
 
 use PDO;
 use PHPUnit\Framework\TestCase;

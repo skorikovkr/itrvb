@@ -1,5 +1,5 @@
 <?php
-namespace Root\Skorikov\Infrastructure\Tests;
+namespace Root\Skorikov\Tests;
 
 use PDO;
 use PDOStatement;
@@ -8,6 +8,7 @@ use Root\Skorikov\Exceptions\PostNotFoundException;
 use Root\Skorikov\Infrastructure\UUID;
 use Root\Skorikov\Models\Post;
 use Root\Skorikov\Repositories\PostRepository\SqlitePostRepository;
+use Root\Skorikov\Tests\Helper\DummyLogger;
 
 class SqlitePostRepositoryTest extends TestCase
 {
@@ -17,7 +18,7 @@ class SqlitePostRepositoryTest extends TestCase
 		$statementStub = $this->createStub(PDOStatement::class);
 		$statementStub->method('fetch')->willReturn(false);
 		$connectionStub->method('prepare')->willReturn($statementStub);
-		$repository = new SqlitePostRepository($connectionStub);
+		$repository = new SqlitePostRepository($connectionStub, new DummyLogger());
 		$this->expectException(PostNotFoundException::class);
         $testUUID = '00fbaf33-a65c-47a9-81a3-feb4a1417363';
 		$this->expectExceptionMessage("Post not found (uuid:$testUUID).");
@@ -37,7 +38,7 @@ class SqlitePostRepositoryTest extends TestCase
 		]);
 		$connectionStub = $this->createStub(PDO::class);
 		$connectionStub->method('prepare')->willReturn($statementStub);
-		$repository = new SqlitePostRepository($connectionStub);
+		$repository = new SqlitePostRepository($connectionStub, new DummyLogger());
 		$entity = $repository->get(new UUID($testUUID));
         $this->assertEquals($entity->getUuid()->__toString(), $testUUID);
         $this->assertEquals($entity->getAuthorUserUuid()->__toString(), $testUUID);
@@ -57,7 +58,7 @@ class SqlitePostRepositoryTest extends TestCase
 		]);
 		$connectionStub = $this->createStub(PDO::class);
 		$connectionStub->method('prepare')->willReturn($statementMock);
-		$repository = new SqlitePostRepository($connectionStub);
+		$repository = new SqlitePostRepository($connectionStub, new DummyLogger());
 		$repository->save(
 			new Post(
 				new UUID($testUUID),

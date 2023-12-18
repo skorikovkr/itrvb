@@ -1,6 +1,6 @@
 <?php
 
-namespace Tgu\Aksenov\Blog\Commands;
+namespace Root\Skorikov\Commands;
 
 use Root\Skorikov\Exceptions\CommandException;
 use Root\Skorikov\Exceptions\UserNotFoundException;

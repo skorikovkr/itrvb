@@ -2,6 +2,7 @@
 namespace Root\Skorikov\Repositories\PostRepository;
 
 use PDO;
+use Psr\Log\LoggerInterface;
 use Root\Skorikov\Exceptions\PostNotFoundException;
 use Root\Skorikov\Exceptions\UserNotFoundException;
 use Root\Skorikov\Infrastructure\SqliteConnector;
@@ -12,7 +13,8 @@ use Root\Skorikov\Repositories\Interfaces\PostRepositoryInterface;
 class SqlitePostRepository implements PostRepositoryInterface
 {
     public function __construct(
-        private PDO $connection
+        private PDO $connection,
+        private LoggerInterface $logger
     )    
     {
     }
@@ -21,6 +23,7 @@ class SqlitePostRepository implements PostRepositoryInterface
         $sql = $this->connection->prepare(
             "INSERT INTO posts (title,text,author_uuid,uuid) VALUES (:title,:text,:author_uuid,:uuid)"
         );
+        $this->logger->info("Post created: " . $post->getUuid());
         $sql->execute([
             'title' => $post->getTitle(),
             'text' => $post->getText(),
@@ -38,6 +41,7 @@ class SqlitePostRepository implements PostRepositoryInterface
         ]);
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         if (!$result) {
+            $this->logger->warning("Post not found: " . $uuid);
             throw new PostNotFoundException("Post not found (uuid:$uuid).");
         }
         return new Post(

@@ -1,5 +1,6 @@
 <?php
 
+use Root\Skorikov\Actions\Comments\SetLike as CommentsSetLike;
 use Root\Skorikov\Actions\Posts\CreateComment;
 use Root\Skorikov\Exceptions\HttpException;
 use Root\Skorikov\Actions\Users\CreateUser;
@@ -36,7 +37,8 @@ $routes = [
 		'/users/create' => CreateUser::class,
 		'/posts/create' => CreatePost::class,
 		'/posts/comment' => CreateComment::class,
-		'/posts/set-like' => SetLike::class
+		'/posts/set-like' => SetLike::class,
+		'/comments/set-like' => CommentsSetLike::class
 	],
 	'DELETE' => [
 		'/posts' => DeletePost::class,

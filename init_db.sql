@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS PostsLikes;
 
 PRAGMA foreign_keys = ON;
 
@@ -28,6 +29,15 @@ CREATE TABLE IF NOT EXISTS comments
     post_uuid TEXT NOT NULL,
     text TEXT NOT NULL,
     foreign key(author_uuid) references users(uuid),
+    foreign key(post_uuid) references posts(uuid)
+);
+
+CREATE TABLE IF NOT EXISTS PostsLikes
+(
+    uuid TEXT NOT NULL CONSTRAINT uuid_pk PRIMARY KEY,
+    user_uuid TEXT NOT NULL,
+    post_uuid TEXT NOT NULL,
+    foreign key(user_uuid) references users(uuid),
     foreign key(post_uuid) references posts(uuid)
 );
 
